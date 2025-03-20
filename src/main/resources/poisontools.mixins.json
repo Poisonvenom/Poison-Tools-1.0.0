@@ -1,0 +1,12 @@
+{
+  "required": true,
+  "package": "net.poisonvenom.poisontools.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "mixins": [
+  ]
+}

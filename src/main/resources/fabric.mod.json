@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "id": "poison-tools",
+  "version": "1.0.0",
+  "name": "PoisonTools",
+  "description": "Poisonvenom's minecraft tools.",
+  "authors": [
+    "Poisonvenom"
+  ],
+  "contact": {
+    "repo": "https://github.com/Poisonvenom"
+  },
+  "icon": "assets/icon/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "meteor": [
+      "net.poisonvenom.poisontools.PoisonTools"
+    ]
+  },
+  "accessWidener": "poisontools.accesswidener",
+  "mixins": [
+    "poisontools.mixins.json"
+  ],
+  "custom": {
+    "meteor-client:color": "0,255,0"
+  },
+  "depends": {
+    "java": ">=21",
+    "minecraft": ">=${mc_version}",
+    "meteor-client": "*"
+  }
+}
