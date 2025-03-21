@@ -300,7 +300,7 @@ public class ActivatedSpawnerDetector extends Module {
     private boolean activatedSpawnerFound = false;
 
     public ActivatedSpawnerDetector() {
-        super(PoisonTools.Main, "ActivatedSpawnerDetector", "Detects if a player has been near a mob spawner in the past. May be useful for finding player made stashes in dungeons, mineshafts, and other places.");
+        super(PoisonTools.Other, "ActivatedSpawnerDetector", "Detects if a player has been near a mob spawner in the past. May be useful for finding player made stashes in dungeons, mineshafts, and other places.");
     }
     @Override
     public void onActivate() {

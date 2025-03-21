@@ -107,7 +107,7 @@ public class CaveDisturbanceDetector extends Module {
 	private double distance=2000000000;
 
 	public CaveDisturbanceDetector() {
-		super(PoisonTools.Main,"CaveDisturbanceDetector", "Scans for single air blocks within the cave air blocks found in caves and underground structures in 1.13+ chunks. There are several false positives.");
+		super(PoisonTools.Other,"CaveDisturbanceDetector", "Scans for single air blocks within the cave air blocks found in caves and underground structures in 1.13+ chunks. There are several false positives.");
 	}
 
 	@Override

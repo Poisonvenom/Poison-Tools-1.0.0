@@ -21,7 +21,7 @@ public class MultiUse extends Module {
             .build()
     );
     public MultiUse() {
-        super(PoisonTools.Main, "multi-use", "Uses an item multiple times per item use");
+        super(PoisonTools.Exclusives, "multi-use", "Uses an item multiple times per item use");
     }
     @EventHandler
     private void onMouseButton(MouseButtonEvent event) {

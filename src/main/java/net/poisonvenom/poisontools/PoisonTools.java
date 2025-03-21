@@ -10,9 +10,11 @@ import net.poisonvenom.poisontools.hud.ElytraCount;
 import net.poisonvenom.poisontools.modules.*;
 
 public class PoisonTools extends MeteorAddon {
-        public static final Category Main = new Category("Poison Tools");
+        public static final Category Other = new Category("PT - Other Mods");
+        public static final Category Exclusives = new Category("PT - Exclusives");
         @Override
         public void onInitialize() {
+                //taken from other mods
                 Modules.get().add(new BaseFinder());
                 Modules.get().add(new ActivatedSpawnerDetector());
                 Modules.get().add(new PortalPatternFinder());
@@ -29,11 +31,17 @@ public class PoisonTools extends MeteorAddon {
                 Commands.add(new ViewNbtCommand());
                 Commands.add(new GarbageCleanerCommand());
                 Hud.get().register(ElytraCount.INFO);
+
+                //Poison Tools Exclusives
+                Modules.get().add(new B52());
+                Modules.get().add(new BetterBeeHives());
+                Modules.get().add(new OnlinePearls());
         }
 
         @Override
         public void onRegisterCategories() {
-                Modules.registerCategory(Main);
+                Modules.registerCategory(Other);
+                Modules.registerCategory(Exclusives);
         }
 
         public String getPackage() {

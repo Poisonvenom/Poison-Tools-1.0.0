@@ -23,7 +23,7 @@ public class AttributeSwap extends Module {
     private int prevSlot = -1;
     private int dDelay = 0;
     public AttributeSwap() {
-        super(PoisonTools.Main, "attribute-swap", "Swaps attributes of the main hand item with the target slot on attack");
+        super(PoisonTools.Other, "attribute-swap", "Swaps attributes of the main hand item with the target slot on attack");
     }
     @EventHandler
     private void onAttack(AttackEntityEvent event) {

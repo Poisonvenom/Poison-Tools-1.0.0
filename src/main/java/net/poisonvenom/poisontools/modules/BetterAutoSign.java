@@ -219,7 +219,7 @@ public class BetterAutoSign extends Module {
     private int warningticks = 0;
 
     public BetterAutoSign() {
-        super(PoisonTools.Main, "Better-auto-sign", "Automatically writes signs and can dye them as well. Credits to MeteorTweaks.");
+        super(PoisonTools.Exclusives, "Better-auto-sign", "Automatically writes signs and can dye them as well. Credits to MeteorTweaks.");
     }
 
     @Override

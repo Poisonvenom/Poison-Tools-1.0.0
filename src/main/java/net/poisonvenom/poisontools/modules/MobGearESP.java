@@ -83,7 +83,7 @@ public class MobGearESP extends Module {
     ));
 
     public MobGearESP() {
-        super(PoisonTools.Main, "MobGearESP", "ESP Module that highlights mobs likely wearing player gear.");
+        super(PoisonTools.Other, "MobGearESP", "ESP Module that highlights mobs likely wearing player gear.");
     }
 
     public final Setting<ShapeMode> shapeMode = sgGeneral.add(new EnumSetting.Builder<ShapeMode>()

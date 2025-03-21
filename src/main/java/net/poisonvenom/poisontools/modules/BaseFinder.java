@@ -719,7 +719,7 @@ public class BaseFinder extends Module {
     private int entityScanTicks;
 
     public BaseFinder() {
-        super(PoisonTools.Main,"BaseFinder", "Estimates if a build or base may be in the chunk based on the blocks it contains.");
+        super(PoisonTools.Other,"BaseFinder", "Estimates if a build or base may be in the chunk based on the blocks it contains.");
     }
     private void clearChunkData() {
         baseChunks.clear();
