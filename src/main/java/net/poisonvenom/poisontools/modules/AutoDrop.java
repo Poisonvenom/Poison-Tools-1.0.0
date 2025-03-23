@@ -35,7 +35,7 @@ public class AutoDrop extends Module {
             .visible(dropthisslot::get)
             .build());
 
-    public AutoDrop() {super(PoisonTools.Exclusives, "auto-drop", "Drops the stack in your selected slot automatically");}
+    public AutoDrop() {super(PoisonTools.Other, "auto-drop", "Drops the stack in your selected slot automatically");}
     private int previousslot=0;
     private boolean getprevslot=false;
 
