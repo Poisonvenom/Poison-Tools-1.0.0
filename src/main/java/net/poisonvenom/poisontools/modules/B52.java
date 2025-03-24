@@ -22,5 +22,6 @@ public class B52  extends Module {
     @EventHandler
     private void onPreTick(TickEvent.Pre event) {
         //WIP
+        mc.crosshairTarget.getPos();
     }
 }
