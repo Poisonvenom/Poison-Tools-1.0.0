@@ -1,6 +1,9 @@
 package net.poisonvenom.poisontools.modules;
 
 import meteordevelopment.meteorclient.events.world.TickEvent;
+import meteordevelopment.meteorclient.settings.BoolSetting;
+import meteordevelopment.meteorclient.settings.Setting;
+import meteordevelopment.meteorclient.settings.SettingGroup;
 import meteordevelopment.meteorclient.systems.modules.Module;
 import meteordevelopment.meteorclient.utils.player.ChatUtils;
 import meteordevelopment.orbit.EventHandler;
@@ -17,11 +20,10 @@ import java.util.*;
 
 public class OnlinePearls extends Module {
     private final List<PlayerEntity> playerList = new ArrayList<>();
-
     private final List<Text> potentialNames = new ArrayList<>();
-
     private static final Set<String> COMMON_WORDS = new HashSet<>(Arrays.asList(
-            "the", "is", "in", "a", "and", "on", "of", "to", "for", "by", "with", "an", "that", "it", "at", "as", "this", "my", "me", "you", "your", "are", "was", "pearl", "pearls"
+            "the", "is", "in", "a", "and", "on", "of", "to", "for", "by", "with", "an", "that", "it", "at", "as", "this", "my", "me",
+            "you", "your", "are", "was", "pearl", "pearls", "back", "up", "backup", ":)"
     ));
 
     public OnlinePearls() {
@@ -31,6 +33,7 @@ public class OnlinePearls extends Module {
     @Override
     public void onActivate() {
         playerList.clear();
+        //this.toggle();
     }
 
     @Override
@@ -40,6 +43,10 @@ public class OnlinePearls extends Module {
 
     @EventHandler
     private void onPreTick(TickEvent.Pre event) {
+
+    }
+
+    private void mainAlgorithm() {
         if (mc.world == null || mc.player == null) return;
 
         int renderDistance = mc.options.getViewDistance().getValue();
@@ -67,14 +74,13 @@ public class OnlinePearls extends Module {
             }
         }
         for (PlayerEntity player : playerList) {
-            String name = player.getName().getLiteralString();
-            ChatUtils.sendMsg(Text.of("This player is online: " + name));
+            ChatUtils.sendMsg(Text.of("This player is online: " + player.getName().getLiteralString()));
         }
     }
 
     private void processSignText(SignText txt) {
         for (int i = 0; i < 4; i++) {
-            List<Text> words = processSignLine(txt.getMessages(false)[i]);
+            List<Text> words = processSignTextHelper(txt.getMessages(false)[i]);
             potentialNames.addAll(words);
             for (Text word : words) {
                 //ChatUtils.sendMsg(word);
@@ -82,7 +88,7 @@ public class OnlinePearls extends Module {
         }
     }
 
-    private List<Text> processSignLine(Text txt) {
+    private List<Text> processSignTextHelper(Text txt) {
         List<Text> uniqueWords = new ArrayList<>();
 
         String[] words = txt.getString().split("\\s+");
@@ -92,10 +98,18 @@ public class OnlinePearls extends Module {
                 word = word.replace("'s", "");
             }
             String cleaned = word.replaceAll("[^a-zA-Z0-9]", "");
-            if (cleaned.length() > 3 && !COMMON_WORDS.contains(cleaned)) {
+            if (cleaned.length() > 2 && !COMMON_WORDS.contains(cleaned)) {
                 uniqueWords.add(Text.literal(cleaned));
             }
         }
         return uniqueWords;
     }
+
+    private final SettingGroup sgGeneral = settings.getDefaultGroup();
+
+    private final Setting<Boolean> continous = sgGeneral.add(new BoolSetting.Builder()
+            .name("Constantly Run")
+            .description("Continuously runs the module while toggled on (not recommended for performance reasons).")
+            .defaultValue(false)
+            .build());
 }
