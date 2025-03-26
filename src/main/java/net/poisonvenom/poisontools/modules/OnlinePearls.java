@@ -22,8 +22,7 @@ public class OnlinePearls extends Module {
     private final List<PlayerEntity> playerList = new ArrayList<>();
     private final List<Text> potentialNames = new ArrayList<>();
     private static final Set<String> COMMON_WORDS = new HashSet<>(Arrays.asList(
-            "the", "is", "in", "a", "and", "on", "of", "to", "for", "by", "with", "an", "that", "it", "at", "as", "this", "my", "me",
-            "you", "your", "are", "was", "pearl", "pearls", "back", "up", "backup", ":)"
+            "the", "is", "in", "a", "and", "on", "of", "to", "for", "by", "with", "an", "that", "it", "at", "as", "this", "my", "me", "you", "your", "are", "was", "pearl", "pearls", "back", "up", "backup", "poisonvenom", ":)", "main"
     ));
 
     public OnlinePearls() {
@@ -33,17 +32,22 @@ public class OnlinePearls extends Module {
     @Override
     public void onActivate() {
         playerList.clear();
-        //this.toggle();
+        potentialNames.clear();
+        if (!continous.get()) {
+            mainAlgorithm();
+            this.toggle();
+        }
     }
 
     @Override
     public void onDeactivate() {
         playerList.clear();
+        potentialNames.clear();
     }
 
     @EventHandler
     private void onPreTick(TickEvent.Pre event) {
-
+        if (continous.get()) mainAlgorithm();
     }
 
     private void mainAlgorithm() {
@@ -108,7 +112,7 @@ public class OnlinePearls extends Module {
     private final SettingGroup sgGeneral = settings.getDefaultGroup();
 
     private final Setting<Boolean> continous = sgGeneral.add(new BoolSetting.Builder()
-            .name("Constantly Run")
+            .name("Run Constantly")
             .description("Continuously runs the module while toggled on (not recommended for performance reasons).")
             .defaultValue(false)
             .build());
