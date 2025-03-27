@@ -10,7 +10,7 @@ import net.poisonvenom.poisontools.hud.ElytraCount;
 import net.poisonvenom.poisontools.modules.*;
 
 public class PoisonTools extends MeteorAddon {
-        public static final Category Other = new Category("PT - Other Mods");
+        public static final Category Other = new Category("PT - Borrowed Mods");
         public static final Category Exclusives = new Category("PT - Exclusives");
         @Override
         public void onInitialize() {
@@ -36,6 +36,7 @@ public class PoisonTools extends MeteorAddon {
                 Modules.get().add(new B52());
                 Modules.get().add(new BetterBeeHives());
                 Modules.get().add(new OnlinePearls());
+                Modules.get().add(new MaskSpawner());
         }
 
         @Override
