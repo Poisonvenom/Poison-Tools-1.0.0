@@ -72,13 +72,11 @@ public class OnlinePearls extends Module {
 
         for (PlayerEntity player : mc.world.getPlayers()) {
             for (Text name : potentialNames) {
-                if (player.getName().toString().equalsIgnoreCase(name.toString())) {
+                if (player.getName().toString().equalsIgnoreCase(name.toString()) && !playerList.contains(player)) {
                     playerList.add(player);
+                    ChatUtils.sendMsg(Text.of(player.getName().getLiteralString() + " is online."));
                 }
             }
-        }
-        for (PlayerEntity player : playerList) {
-            ChatUtils.sendMsg(Text.of("This player is online: " + player.getName().getLiteralString()));
         }
     }
 
@@ -101,7 +99,7 @@ public class OnlinePearls extends Module {
             if (word.contains("'s")) {
                 word = word.replace("'s", "");
             }
-            String cleaned = word.replaceAll("[^a-zA-Z0-9]", "");
+            String cleaned = word.replaceAll("[^a-zA-Z0-9_]", "");
             if (cleaned.length() > 2 && !COMMON_WORDS.contains(cleaned)) {
                 uniqueWords.add(Text.literal(cleaned));
             }
@@ -114,6 +112,11 @@ public class OnlinePearls extends Module {
     private final Setting<Boolean> continous = sgGeneral.add(new BoolSetting.Builder()
             .name("Run Constantly")
             .description("Continuously runs the module while toggled on (not recommended for performance reasons).")
+            .defaultValue(false)
+            .build());
+    private final Setting<Boolean> individule = sgGeneral.add(new BoolSetting.Builder()
+            .name("Individule Signs")
+            .description("Check a single sign.")
             .defaultValue(false)
             .build());
 }
