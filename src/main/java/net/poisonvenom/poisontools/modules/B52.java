@@ -9,7 +9,7 @@ public class B52  extends Module {
     public B52() {
         super(PoisonTools.Exclusives, "B-52", "Requires air place. Start bombing while flying.");
     }
-
+    // coming soon
     @Override
     public void onActivate() {
 
