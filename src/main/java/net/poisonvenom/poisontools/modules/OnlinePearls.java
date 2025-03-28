@@ -16,13 +16,13 @@ import net.minecraft.world.chunk.WorldChunk;
 import net.poisonvenom.poisontools.PoisonTools;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class OnlinePearls extends Module {
-    private final List<Text> playerList = new ArrayList<>();
-    private final List<Text> potentialNames = new ArrayList<>();
+    private final List<String> playerList = new ArrayList<>();
+    private final List<String> potentialNames = new ArrayList<>();
     private static final Set<String> COMMON_WORDS = new HashSet<>(Arrays.asList(
-            "the", "is", "in", "a", "and", "on", "of", "to", "for", "by", "with", "an", "that", "it", "at", "as", "this", "my", "me", "you", "your", "are", "was", "pearl", "pearls", "back", "up", "backup", "poisonvenom", ":)", "main"
+            "the", "is", "one", "two", "three", "in", "a", "and", "on", "of", "to", "for", "by", "with", "an",
+            "that", "it", "at", "as", "this", "my", "me", "you", "your", "are", "was", "pearl", "pearls", "back", "up", "backup", "poisonvenom", ":)", "main"
     ));
 
     public OnlinePearls() {
@@ -33,7 +33,7 @@ public class OnlinePearls extends Module {
     public void onActivate() {
         playerList.clear();
         potentialNames.clear();
-        if (!continous.get()) {
+        if (!continuous.get()) {
             mainAlgorithm();
             this.toggle();
         }
@@ -47,7 +47,7 @@ public class OnlinePearls extends Module {
 
     @EventHandler
     private void onPreTick(TickEvent.Pre event) {
-        if (continous.get()) mainAlgorithm();
+        if (continuous.get()) mainAlgorithm();
     }
 
     private void mainAlgorithm() {
@@ -71,10 +71,10 @@ public class OnlinePearls extends Module {
         }
         try {
             List<String> playerNames = mc.getNetworkHandler().getPlayerList().stream().map(player -> player.getProfile().getName()).toList();
-            for (Text name : potentialNames) {
-                if (playerNames.contains(name.getLiteralString()) && !playerList.contains(name)) {
+            for (String name : potentialNames) {
+                if (containsIgnoreCase(playerNames, name) && !containsIgnoreCase(playerList, name)) {
                     playerList.add(name);
-                    ChatUtils.sendMsg(Text.of(name.getLiteralString() + " is online."));
+                    ChatUtils.sendMsg(Text.of(name + " is online."));
                 }
             }
         } catch (NullPointerException e) {
@@ -84,13 +84,13 @@ public class OnlinePearls extends Module {
 
     private void processSignText(SignText txt) {
         for (int i = 0; i < 4; i++) {
-            List<Text> words = processSignTextHelper(txt.getMessages(false)[i]);
+            List<String> words = processSignTextHelper(txt.getMessages(false)[i]);
             potentialNames.addAll(words);
         }
     }
 
-    private List<Text> processSignTextHelper(Text txt) {
-        List<Text> uniqueWords = new ArrayList<>();
+    private List<String> processSignTextHelper(Text txt) {
+        List<String> uniqueWords = new ArrayList<>();
 
         String[] words = txt.getString().split("\\s+");
         for (String word : words) {
@@ -99,16 +99,25 @@ public class OnlinePearls extends Module {
                 word = word.replace("'s", "");
             }
             String cleaned = word.replaceAll("[^a-zA-Z0-9_]", "");
-            if (cleaned.length() > 2 && !COMMON_WORDS.contains(cleaned) && !potentialNames.contains(Text.of(cleaned))) {
-                uniqueWords.add(Text.literal(cleaned));
+            if (cleaned.length() > 2 && !containsIgnoreCase(COMMON_WORDS.stream().toList(), cleaned) && !potentialNames.contains(cleaned)) {
+                uniqueWords.add(cleaned);
             }
         }
         return uniqueWords;
     }
 
+    private boolean containsIgnoreCase(List<String> list, String str) {
+        for (String str2 : list) {
+            if (str2.equalsIgnoreCase(str)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     private final SettingGroup sgGeneral = settings.getDefaultGroup();
 
-    private final Setting<Boolean> continous = sgGeneral.add(new BoolSetting.Builder()
+    private final Setting<Boolean> continuous = sgGeneral.add(new BoolSetting.Builder()
             .name("Run Constantly")
             .description("Continuously runs the module while toggled on (not recommended for performance reasons).")
             .defaultValue(false)
