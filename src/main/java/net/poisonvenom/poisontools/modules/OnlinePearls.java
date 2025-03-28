@@ -10,16 +10,19 @@ import meteordevelopment.orbit.EventHandler;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.SignBlockEntity;
 import net.minecraft.block.entity.SignText;
+import net.minecraft.client.network.PlayerListEntry;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.chunk.WorldChunk;
 import net.poisonvenom.poisontools.PoisonTools;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class OnlinePearls extends Module {
-    private final List<PlayerEntity> playerList = new ArrayList<>();
+    private final List<Text> playerList = new ArrayList<>();
     private final List<Text> potentialNames = new ArrayList<>();
     private static final Set<String> COMMON_WORDS = new HashSet<>(Arrays.asList(
             "the", "is", "in", "a", "and", "on", "of", "to", "for", "by", "with", "an", "that", "it", "at", "as", "this", "my", "me", "you", "your", "are", "was", "pearl", "pearls", "back", "up", "backup", "poisonvenom", ":)", "main"
@@ -69,14 +72,19 @@ public class OnlinePearls extends Module {
                 }
             }
         }
-
-        for (PlayerEntity player : mc.world.getPlayers()) {
+        try {
+            List<String> playerNames = mc.getNetworkHandler().getPlayerList().stream()
+                    .map(player -> player.getProfile().getName())
+                    .collect(Collectors.toList());
             for (Text name : potentialNames) {
-                if (player.getName().toString().equalsIgnoreCase(name.toString()) && !playerList.contains(player)) {
-                    playerList.add(player);
-                    ChatUtils.sendMsg(Text.of(player.getName().getLiteralString() + " is online."));
+                if (playerNames.contains(name.getLiteralString()) && !playerList.contains(name)) {
+                    playerList.add(name);
+                    ChatUtils.sendMsg(Text.of(name.getLiteralString() + " is online."));
                 }
             }
+
+        } catch (NullPointerException e) {
+            ChatUtils.sendMsg(Text.of("null"));
         }
     }
 
@@ -100,7 +108,7 @@ public class OnlinePearls extends Module {
                 word = word.replace("'s", "");
             }
             String cleaned = word.replaceAll("[^a-zA-Z0-9_]", "");
-            if (cleaned.length() > 2 && !COMMON_WORDS.contains(cleaned)) {
+            if (cleaned.length() > 2 && !COMMON_WORDS.contains(cleaned) && !potentialNames.contains(Text.of(cleaned))) {
                 uniqueWords.add(Text.literal(cleaned));
             }
         }
