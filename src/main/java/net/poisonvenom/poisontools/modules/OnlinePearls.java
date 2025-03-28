@@ -70,9 +70,7 @@ public class OnlinePearls extends Module {
             }
         }
         try {
-            List<String> playerNames = mc.getNetworkHandler().getPlayerList().stream()
-                    .map(player -> player.getProfile().getName())
-                    .collect(Collectors.toList());
+            List<String> playerNames = mc.getNetworkHandler().getPlayerList().stream().map(player -> player.getProfile().getName()).toList();
             for (Text name : potentialNames) {
                 if (playerNames.contains(name.getLiteralString()) && !playerList.contains(name)) {
                     playerList.add(name);
@@ -80,7 +78,7 @@ public class OnlinePearls extends Module {
                 }
             }
         } catch (NullPointerException e) {
-            ChatUtils.sendMsg(Text.of("Not connected to a server."));
+            ChatUtils.sendMsg(Text.of("Not connected to a server!"));
         }
     }
 
@@ -115,8 +113,8 @@ public class OnlinePearls extends Module {
             .description("Continuously runs the module while toggled on (not recommended for performance reasons).")
             .defaultValue(false)
             .build());
-    private final Setting<Boolean> individule = sgGeneral.add(new BoolSetting.Builder()
-            .name("Individule Signs")
+    private final Setting<Boolean> individual = sgGeneral.add(new BoolSetting.Builder()
+            .name("Individual Signs")
             .description("Check a single sign.")
             .defaultValue(false)
             .build());
