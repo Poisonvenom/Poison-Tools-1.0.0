@@ -10,9 +10,6 @@ import meteordevelopment.orbit.EventHandler;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.SignBlockEntity;
 import net.minecraft.block.entity.SignText;
-import net.minecraft.client.network.PlayerListEntry;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.chunk.WorldChunk;
@@ -82,9 +79,8 @@ public class OnlinePearls extends Module {
                     ChatUtils.sendMsg(Text.of(name.getLiteralString() + " is online."));
                 }
             }
-
         } catch (NullPointerException e) {
-            ChatUtils.sendMsg(Text.of("null"));
+            ChatUtils.sendMsg(Text.of("Not connected to a server."));
         }
     }
 
@@ -92,9 +88,6 @@ public class OnlinePearls extends Module {
         for (int i = 0; i < 4; i++) {
             List<Text> words = processSignTextHelper(txt.getMessages(false)[i]);
             potentialNames.addAll(words);
-            for (Text word : words) {
-                //ChatUtils.sendMsg(word);
-            }
         }
     }
 
