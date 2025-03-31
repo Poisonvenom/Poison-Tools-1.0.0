@@ -11,6 +11,8 @@ import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.SignBlockEntity;
 import net.minecraft.block.entity.SignText;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.projectile.thrown.EnderPearlEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
@@ -24,8 +26,9 @@ public class OnlinePearls extends Module {
     private final List<String> playerList = new ArrayList<>();
     private final List<String> potentialNames = new ArrayList<>();
     private static final Set<String> COMMON_WORDS = new HashSet<>(Arrays.asList(
-            "the", "is", "one", "two", "three", "in", "a", "and", "on", "of", "to", "for", "by", "with", "an",
-            "that", "it", "at", "as", "this", "my", "me", "you", "your", "are", "was", "pearl", "pearls", "back", "up", "backup", "poisonvenom", ":)", "main"
+            "the", "is", "one", "two", "three", "in", "a", "and", "on", "of", "to", "for", "by", "with", "an", "here",
+            "that", "it", "at", "as", "this", "my", "me", "you", "your", "are", "was", "pearl", "pearls", "back", "up",
+            "backup", "poisonvenom", ":)", "main", "second", "first", "third", "wuz", "ender", "enderpearl", "enderpearls"
     ));
 
     public OnlinePearls() {
@@ -77,7 +80,7 @@ public class OnlinePearls extends Module {
                 processSignText(frontTxt);
                 processSignText(backTxt);
             }
-        } else { // scan for all signs in loaded chunks
+        } else if (allSigns.get()) { // scan for all signs in loaded chunks
             int renderDistance = mc.options.getViewDistance().getValue();
             ChunkPos playerChunkPos = new ChunkPos(mc.player.getBlockPos());
             for (int chunkX = playerChunkPos.x - renderDistance; chunkX <= playerChunkPos.x + renderDistance; chunkX++) {
@@ -90,6 +93,27 @@ public class OnlinePearls extends Module {
                             SignText backTxt = ((SignBlockEntity) blockEntity).getText(true);
                             processSignText(frontTxt);
                             processSignText(backTxt);
+                        }
+                    }
+                }
+            }
+        } else {
+            for (Entity ent : mc.world.getEntities()) {
+                if (ent instanceof EnderPearlEntity) {
+                    int x = ent.getBlockX();
+                    int y = ent.getBlockY();
+                    int z = ent.getBlockZ();
+                    for (int i = x - 3; i <= x + 3; i++) {
+                        for (int j = y - 3; j <= y + 3; j++) {
+                            for (int k = z - 3; k <= z + 3; k++) {
+                                BlockEntity blockEntity = mc.world.getBlockEntity(new BlockPos(i, j, k));
+                                if (blockEntity instanceof SignBlockEntity) {
+                                    SignText frontTxt = ((SignBlockEntity) blockEntity).getText(true);
+                                    SignText backTxt = ((SignBlockEntity) blockEntity).getText(true);
+                                    processSignText(frontTxt);
+                                    processSignText(backTxt);
+                                }
+                            }
                         }
                     }
                 }
@@ -152,6 +176,11 @@ public class OnlinePearls extends Module {
     private final Setting<Boolean> individual = sgGeneral.add(new BoolSetting.Builder()
             .name("Individual Signs")
             .description("Check a single sign.")
+            .defaultValue(false)
+            .build());
+    private final Setting<Boolean> allSigns = sgGeneral.add(new BoolSetting.Builder()
+            .name("All Signs")
+            .description("Scan all signs in render distance.")
             .defaultValue(false)
             .build());
 }
