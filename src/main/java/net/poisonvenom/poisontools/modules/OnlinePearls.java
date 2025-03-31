@@ -36,11 +36,9 @@ public class OnlinePearls extends Module {
     public void onActivate() {
         playerList.clear();
         potentialNames.clear();
-        if (!continuous.get() && !individual.get()) {
+        if (!continuous.get()) {
             mainAlgorithm();
             this.toggle();
-        } else if (!continuous.get() && individual.get()) {
-            singleSign();
         }
     }
 
@@ -53,57 +51,51 @@ public class OnlinePearls extends Module {
     @EventHandler
     private void onPreTick(TickEvent.Pre event) {
         if (continuous.get()) mainAlgorithm();
-        if (individual.get()) singleSign();
     }
 
     private void singleSign() {
         if (mc.world == null || mc.player == null) return;
-        Vec3d pos = null;
-        try {
-            pos = mc.crosshairTarget.getPos();
-        } catch (NullPointerException e) {
-            ChatUtils.sendMsg(Text.of("Cursor not pointing at anything."));
-            return;
-        }
-        BlockEntity sign = mc.world.getBlockEntity(new BlockPos((int) pos.getX(), (int) pos.getY(), (int) pos.getZ()));
-        if (sign instanceof SignBlockEntity) {
-            SignText frontTxt = ((SignBlockEntity) sign).getText(true);
-            SignText backTxt = ((SignBlockEntity) sign).getText(true);
-            processSignText(frontTxt);
-            processSignText(backTxt);
-        }
-        try {
-            List<String> playerNames = mc.getNetworkHandler().getPlayerList().stream().map(player -> player.getProfile().getName()).toList();
-            for (String name : potentialNames) {
-                if (containsIgnoreCase(playerNames, name) && !containsIgnoreCase(playerList, name)) {
-                    playerList.add(name);
-                    ChatUtils.sendMsg(Text.of(name + " is online."));
-                }
-            }
-        } catch (NullPointerException e) {
-            ChatUtils.sendMsg(Text.of("Not connected to a server!"));
-        }
+
 
     }
+
     private void mainAlgorithm() {
         if (mc.world == null || mc.player == null) return;
 
-        int renderDistance = mc.options.getViewDistance().getValue();
-        ChunkPos playerChunkPos = new ChunkPos(mc.player.getBlockPos());
-        for (int chunkX = playerChunkPos.x - renderDistance; chunkX <= playerChunkPos.x + renderDistance; chunkX++) {
-            for (int chunkZ = playerChunkPos.z - renderDistance; chunkZ <= playerChunkPos.z + renderDistance; chunkZ++) {
-                WorldChunk chunk = mc.world.getChunk(chunkX, chunkZ);
-                List<BlockEntity> blockEntities = new ArrayList<>(chunk.getBlockEntities().values());
-                for (BlockEntity blockEntity : blockEntities) {
-                    if (blockEntity instanceof SignBlockEntity) {
-                        SignText frontTxt = ((SignBlockEntity) blockEntity).getText(true);
-                        SignText backTxt = ((SignBlockEntity) blockEntity).getText(true);
-                        processSignText(frontTxt);
-                        processSignText(backTxt);
+        if (individual.get()) { // single sign scan
+            Vec3d pos = null;
+            try {
+                pos = mc.crosshairTarget.getPos();
+            } catch (NullPointerException e) {
+                ChatUtils.sendMsg(Text.of("Cursor not pointing at anything."));
+                return;
+            }
+            BlockEntity sign = mc.world.getBlockEntity(new BlockPos((int) pos.getX(), (int) pos.getY(), (int) pos.getZ()));
+            if (sign instanceof SignBlockEntity) {
+                SignText frontTxt = ((SignBlockEntity) sign).getText(true);
+                SignText backTxt = ((SignBlockEntity) sign).getText(true);
+                processSignText(frontTxt);
+                processSignText(backTxt);
+            }
+        } else { // scan for all signs in loaded chunks
+            int renderDistance = mc.options.getViewDistance().getValue();
+            ChunkPos playerChunkPos = new ChunkPos(mc.player.getBlockPos());
+            for (int chunkX = playerChunkPos.x - renderDistance; chunkX <= playerChunkPos.x + renderDistance; chunkX++) {
+                for (int chunkZ = playerChunkPos.z - renderDistance; chunkZ <= playerChunkPos.z + renderDistance; chunkZ++) {
+                    WorldChunk chunk = mc.world.getChunk(chunkX, chunkZ);
+                    List<BlockEntity> blockEntities = new ArrayList<>(chunk.getBlockEntities().values());
+                    for (BlockEntity blockEntity : blockEntities) {
+                        if (blockEntity instanceof SignBlockEntity) {
+                            SignText frontTxt = ((SignBlockEntity) blockEntity).getText(true);
+                            SignText backTxt = ((SignBlockEntity) blockEntity).getText(true);
+                            processSignText(frontTxt);
+                            processSignText(backTxt);
+                        }
                     }
                 }
             }
         }
+        // logic for finding and displaying online players
         try {
             List<String> playerNames = mc.getNetworkHandler().getPlayerList().stream().map(player -> player.getProfile().getName()).toList();
             for (String name : potentialNames) {
