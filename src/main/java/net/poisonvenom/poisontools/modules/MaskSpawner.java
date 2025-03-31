@@ -200,7 +200,6 @@ public class MaskSpawner extends Module {
             .visible(() -> (shapeMode.get() == ShapeMode.Lines || shapeMode.get() == ShapeMode.Both))
             .build()
     );
-
     private final Setting<SettingColor> sideColor3 = sgRender.add(new ColorSetting.Builder()
             .name("floor-mat-2-side-color")
             .description("Color of the floor mat half closest to the spawner.")

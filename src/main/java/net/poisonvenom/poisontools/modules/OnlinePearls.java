@@ -7,11 +7,14 @@ import meteordevelopment.meteorclient.settings.SettingGroup;
 import meteordevelopment.meteorclient.systems.modules.Module;
 import meteordevelopment.meteorclient.utils.player.ChatUtils;
 import meteordevelopment.orbit.EventHandler;
+import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.SignBlockEntity;
 import net.minecraft.block.entity.SignText;
 import net.minecraft.text.Text;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.chunk.WorldChunk;
 import net.poisonvenom.poisontools.PoisonTools;
 
@@ -33,9 +36,11 @@ public class OnlinePearls extends Module {
     public void onActivate() {
         playerList.clear();
         potentialNames.clear();
-        if (!continuous.get()) {
+        if (!continuous.get() && !individual.get()) {
             mainAlgorithm();
             this.toggle();
+        } else if (!continuous.get() && individual.get()) {
+            singleSign();
         }
     }
 
@@ -48,8 +53,38 @@ public class OnlinePearls extends Module {
     @EventHandler
     private void onPreTick(TickEvent.Pre event) {
         if (continuous.get()) mainAlgorithm();
+        if (individual.get()) singleSign();
     }
 
+    private void singleSign() {
+        if (mc.world == null || mc.player == null) return;
+        Vec3d pos = null;
+        try {
+            pos = mc.crosshairTarget.getPos();
+        } catch (NullPointerException e) {
+            ChatUtils.sendMsg(Text.of("Cursor not pointing at anything."));
+            return;
+        }
+        BlockEntity sign = mc.world.getBlockEntity(new BlockPos((int) pos.getX(), (int) pos.getY(), (int) pos.getZ()));
+        if (sign instanceof SignBlockEntity) {
+            SignText frontTxt = ((SignBlockEntity) sign).getText(true);
+            SignText backTxt = ((SignBlockEntity) sign).getText(true);
+            processSignText(frontTxt);
+            processSignText(backTxt);
+        }
+        try {
+            List<String> playerNames = mc.getNetworkHandler().getPlayerList().stream().map(player -> player.getProfile().getName()).toList();
+            for (String name : potentialNames) {
+                if (containsIgnoreCase(playerNames, name) && !containsIgnoreCase(playerList, name)) {
+                    playerList.add(name);
+                    ChatUtils.sendMsg(Text.of(name + " is online."));
+                }
+            }
+        } catch (NullPointerException e) {
+            ChatUtils.sendMsg(Text.of("Not connected to a server!"));
+        }
+
+    }
     private void mainAlgorithm() {
         if (mc.world == null || mc.player == null) return;
 
