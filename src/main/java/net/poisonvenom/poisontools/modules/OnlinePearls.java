@@ -7,7 +7,6 @@ import meteordevelopment.meteorclient.settings.SettingGroup;
 import meteordevelopment.meteorclient.systems.modules.Module;
 import meteordevelopment.meteorclient.utils.player.ChatUtils;
 import meteordevelopment.orbit.EventHandler;
-import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.SignBlockEntity;
 import net.minecraft.block.entity.SignText;
@@ -28,7 +27,8 @@ public class OnlinePearls extends Module {
     private static final Set<String> COMMON_WORDS = new HashSet<>(Arrays.asList(
             "the", "is", "one", "two", "three", "in", "a", "and", "on", "of", "to", "for", "by", "with", "an", "here",
             "that", "it", "at", "as", "this", "my", "me", "you", "your", "are", "was", "pearl", "pearls", "back", "up",
-            "backup", "poisonvenom", ":)", "main", "second", "first", "third", "wuz", "ender", "enderpearl", "enderpearls"
+            "backup", "poisonvenom", ":)", "main", "second", "first", "third", "wuz", "ender", "enderpearl", "enderpearls",
+            "jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sept", "oct", "nov", "dec"
     ));
 
     public OnlinePearls() {
@@ -54,12 +54,6 @@ public class OnlinePearls extends Module {
     @EventHandler
     private void onPreTick(TickEvent.Pre event) {
         if (continuous.get()) mainAlgorithm();
-    }
-
-    private void singleSign() {
-        if (mc.world == null || mc.player == null) return;
-
-
     }
 
     private void mainAlgorithm() {
@@ -98,11 +92,12 @@ public class OnlinePearls extends Module {
                 }
             }
         } else {
-            for (Entity ent : mc.world.getEntities()) {
-                if (ent instanceof EnderPearlEntity) {
-                    int x = ent.getBlockX();
-                    int y = ent.getBlockY();
-                    int z = ent.getBlockZ();
+            for (Entity entity : mc.world.getEntities()) {
+                if (entity instanceof EnderPearlEntity) {
+                    int x = entity.getBlockX();
+                    int y = entity.getBlockY();
+                    int z = entity.getBlockZ();
+                    // adjust these loops to search larger areas around the pearl
                     for (int i = x - 3; i <= x + 3; i++) {
                         for (int j = y - 3; j <= y + 3; j++) {
                             for (int k = z - 3; k <= z + 3; k++) {
