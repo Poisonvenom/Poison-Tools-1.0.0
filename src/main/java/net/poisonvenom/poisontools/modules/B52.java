@@ -16,7 +16,7 @@ public class B52 extends Module {
     public B52() {
         super(PoisonTools.Exclusives, "B-52", "Requires air place. Start bombing while flying.");
     }
-    public int tick;
+    private int tick;
     @Override
     public void onActivate() {
         tick = 0;
@@ -24,7 +24,7 @@ public class B52 extends Module {
 
     @Override
     public void onDeactivate() {
-
+        tick = 0;
     }
 
     @EventHandler
@@ -40,31 +40,29 @@ public class B52 extends Module {
         for (int i = 0; i < 9; i++) {
             if (inventory.getStack(i).getItem().equals(Items.FLINT_AND_STEEL)) {
                 flintSlot = i;
-                ChatUtils.sendMsg(Text.of("flint " + i));
             } else if (inventory.getStack(i).getItem().equals(Items.TNT)) {
-                ChatUtils.sendMsg(Text.of("tnt " + i));
                 tntSlot = i;
-            } else {
-                return;
             }
         }
 
         if (tick == 0) {
             mc.player.getInventory().setSelectedSlot(tntSlot);
             mc.options.useKey.setPressed(true);
+            ChatUtils.sendMsg(Text.of("tnt click"));
             tick++;
-        } else if (tick == 2) {
+        } else if (tick == 20) {
             mc.options.useKey.setPressed(false);
+            ChatUtils.sendMsg(Text.of("tnt unclick"));
             tick++;
-        } else if (tick == 4) {
+        } else if (tick == 40) {
             if (mc.world.getBlockState(BlockPos.ofFloored(mc.crosshairTarget.getPos())).getBlock() == Blocks.TNT) {
                 mc.player.getInventory().setSelectedSlot(flintSlot);
                 mc.options.useKey.setPressed(true);
             }
             tick++;
-        } else if (tick == 6) {
+        } else if (tick == 60) {
             mc.options.useKey.setPressed(false);
-            tick = 0;
+            tick = -1;
         }
         tick++;
     }
