@@ -50,17 +50,17 @@ public class B52 extends Module {
             mc.options.useKey.setPressed(true);
             ChatUtils.sendMsg(Text.of("tnt click"));
             tick++;
-        } else if (tick == 20) {
+        } else if (tick == 2) {
             mc.options.useKey.setPressed(false);
             ChatUtils.sendMsg(Text.of("tnt unclick"));
             tick++;
-        } else if (tick == 40) {
+        } else if (tick == 4) {
             if (mc.world.getBlockState(BlockPos.ofFloored(mc.crosshairTarget.getPos())).getBlock() == Blocks.TNT) {
                 mc.player.getInventory().setSelectedSlot(flintSlot);
                 mc.options.useKey.setPressed(true);
             }
             tick++;
-        } else if (tick == 60) {
+        } else if (tick == 6) {
             mc.options.useKey.setPressed(false);
             tick = -1;
         }
