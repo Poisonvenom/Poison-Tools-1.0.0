@@ -27,6 +27,7 @@ public class PoisonTools extends MeteorAddon {
                 Modules.get().add(new BetterAutoSign());
                 Modules.get().add(new MultiUse());
                 Modules.get().add(new AutoDrop());
+                Modules.get().add(new NoSpawnerDetector());
                 Commands.add(new WorldInfoCommand());
                 Commands.add(new ViewNbtCommand());
                 Commands.add(new GarbageCleanerCommand());
