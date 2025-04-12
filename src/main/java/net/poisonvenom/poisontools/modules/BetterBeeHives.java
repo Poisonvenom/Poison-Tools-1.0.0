@@ -24,7 +24,7 @@ import java.util.List;
 public class BetterBeeHives extends Module {
     private final List<BeehiveBlockEntity> hives = new ArrayList<>();
     public BetterBeeHives() {
-        super(PoisonTools.Exclusives, "BetterBeehives", "Highlights bee hives and nests with 3 bees in them.");
+        super(PoisonTools.Exclusives, "BetterBeehives", "WIP: Highlights bee hives and nests with 3 bees in them.");
     }
 
     @Override
