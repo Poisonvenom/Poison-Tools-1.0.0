@@ -11,18 +11,16 @@ import net.minecraft.util.math.BlockPos;
 import net.poisonvenom.poisontools.PoisonTools;
 
 public class AutoIgnite extends Module {
+    private int currentSlot;
+    private boolean switched;
+
     public AutoIgnite() {
         super(PoisonTools.Exclusives, "AutoIgnite", "Automatically ignites flammable blocks when moused over.");
     }
 
     @Override
     public void onActivate() {
-
-    }
-
-    @Override
-    public void onDeactivate() {
-
+        switched = false;
     }
 
     @EventHandler
@@ -33,7 +31,6 @@ public class AutoIgnite extends Module {
     private void mainAlgorithm() {
         if (mc.world == null || mc.player == null || mc.crosshairTarget == null) return;
         Inventory inventory = mc.player.getInventory();
-        int currentSlot = mc.player.getInventory().selectedSlot;
         int flintSlot = -1;
         for (int i = 0; i < 9; i++) {
             if (inventory.getStack(i).getItem().equals(Items.FLINT_AND_STEEL)) {
@@ -45,19 +42,24 @@ public class AutoIgnite extends Module {
             return;
         }
 
+        if (switched) {
+            mc.player.getInventory().setSelectedSlot(currentSlot);
+            switched = false;
+        }
+
         if (mc.crosshairTarget.getType() == HitResult.Type.BLOCK) {
             BlockHitResult bhr = (BlockHitResult) mc.crosshairTarget;
             BlockPos pos = bhr.getBlockPos();
 
             if (mc.world.getBlockState(pos).isBurnable()) {
+                currentSlot = mc.player.getInventory().selectedSlot;
                 mc.player.getInventory().setSelectedSlot(flintSlot);
+                switched = true;
                 mc.options.useKey.setPressed(true);
             } else {
-                mc.player.getInventory().setSelectedSlot(currentSlot);
                 mc.options.useKey.setPressed(false);
             }
         } else {
-            mc.player.getInventory().setSelectedSlot(currentSlot);
             mc.options.useKey.setPressed(false);
         }
     }
