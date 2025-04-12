@@ -7,6 +7,7 @@ import meteordevelopment.meteorclient.settings.Setting;
 import meteordevelopment.meteorclient.settings.SettingGroup;
 import meteordevelopment.meteorclient.systems.modules.Module;
 import meteordevelopment.orbit.EventHandler;
+import net.minecraft.block.Blocks;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.Items;
 import net.minecraft.util.hit.BlockHitResult;
@@ -16,12 +17,12 @@ import net.poisonvenom.poisontools.PoisonTools;
 
 public class AutoIgnite extends Module {
     private int currentSlot;
-    private boolean switched;
     private int cdCounter;
     private boolean cdHelper;
+    private boolean switched;
 
     public AutoIgnite() {
-        super(PoisonTools.Exclusives, "AutoIgnite", "Automatically ignites flammable blocks when moused over.");
+        super(PoisonTools.Exclusives, "Auto Ignite", "Automatically ignites flammable blocks when moused over.");
     }
 
     @Override
@@ -57,7 +58,6 @@ public class AutoIgnite extends Module {
         if (flintSlot == -1) {
             return;
         }
-
         if (switched) {
             mc.player.getInventory().setSelectedSlot(currentSlot);
             switched = false;
@@ -66,13 +66,20 @@ public class AutoIgnite extends Module {
         if (mc.crosshairTarget.getType() == HitResult.Type.BLOCK) {
             BlockHitResult bhr = (BlockHitResult) mc.crosshairTarget;
             BlockPos pos = bhr.getBlockPos();
-
             if (mc.world.getBlockState(pos).isBurnable() && cdHelper) {
-                currentSlot = mc.player.getInventory().selectedSlot;
-                mc.player.getInventory().setSelectedSlot(flintSlot);
-                mc.options.useKey.setPressed(true);
-                cdHelper = false;
-                switched = true;
+                if (tntOnly.get() && mc.world.getBlockState(pos).getBlock().equals(Blocks.TNT)) {
+                    currentSlot = mc.player.getInventory().selectedSlot;
+                    mc.player.getInventory().setSelectedSlot(flintSlot);
+                    mc.options.useKey.setPressed(true);
+                    cdHelper = false;
+                    switched = true;
+                } else if (!tntOnly.get()) {
+                    currentSlot = mc.player.getInventory().selectedSlot;
+                    mc.player.getInventory().setSelectedSlot(flintSlot);
+                    mc.options.useKey.setPressed(true);
+                    cdHelper = false;
+                    switched = true;
+                }
             } else {
                 mc.options.useKey.setPressed(false);
             }
@@ -96,9 +103,9 @@ public class AutoIgnite extends Module {
     public final Setting<Integer> cooldown = sgGeneral.add(new IntSetting.Builder()
             .name("Cooldown")
             .description("Set the number of ticks in between clicks. Helpful for saving durability or avoiding server rate limits.")
-            .defaultValue(0)
-            .min(0)
-            .sliderRange(0, 40)
+            .defaultValue(1)
+            .min(1)
+            .sliderRange(1, 40)
             .build()
     );
     public final Setting<Boolean> tntOnly = sgGeneral.add(new BoolSetting.Builder()
