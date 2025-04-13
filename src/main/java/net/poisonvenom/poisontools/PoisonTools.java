@@ -28,7 +28,6 @@ public class PoisonTools extends MeteorAddon {
                 Modules.get().add(new MultiUse());
                 Modules.get().add(new AutoDrop());
                 Modules.get().add(new NoSpawnerDetector());
-                Modules.get().add(new AutoIgnite());
                 Commands.add(new WorldInfoCommand());
                 Commands.add(new ViewNbtCommand());
                 Commands.add(new GarbageCleanerCommand());
@@ -39,6 +38,7 @@ public class PoisonTools extends MeteorAddon {
                 Modules.get().add(new BetterBeeHives());
                 Modules.get().add(new OnlinePearls());
                 Modules.get().add(new MaskSpawner());
+                Modules.get().add(new AutoIgnite());
         }
 
         @Override
