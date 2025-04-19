@@ -83,8 +83,6 @@ public class AutoIgnite extends Module {
             } else {
                 mc.options.useKey.setPressed(false);
             }
-        } else {
-            mc.options.useKey.setPressed(false);
         }
     }
 

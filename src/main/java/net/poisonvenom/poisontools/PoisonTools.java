@@ -14,7 +14,7 @@ public class PoisonTools extends MeteorAddon {
         public static final Category Exclusives = new Category("PT - Exclusives");
         @Override
         public void onInitialize() {
-                //taken from other mods
+                // from TrouserStreak
                 Modules.get().add(new BaseFinder());
                 Modules.get().add(new ActivatedSpawnerDetector());
                 Modules.get().add(new PortalPatternFinder());
@@ -32,6 +32,8 @@ public class PoisonTools extends MeteorAddon {
                 Commands.add(new ViewNbtCommand());
                 Commands.add(new GarbageCleanerCommand());
                 Hud.get().register(ElytraCount.INFO);
+
+                // from Jeff Mod
 
                 //Poison Tools Exclusives
                 Modules.get().add(new B52());
