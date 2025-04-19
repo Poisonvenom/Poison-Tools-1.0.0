@@ -12,7 +12,7 @@ Poison-Tools exclusives:
 - Spawner Mask
 
 "Borrowed" Mods:
-- Base Finder-TrouserStreak
+- Base Finder-[TrouserStreak](https://github.com/etianl/Trouser-Streak?tab=readme-ov-file)
 - Activated Spawner Detector-TrouserStreak
 - Portal Pattern Finder-TrouserStreak
 - Cave Disturbance Detector-TrouserStreak
